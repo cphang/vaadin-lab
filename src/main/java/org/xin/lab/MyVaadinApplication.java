@@ -16,19 +16,30 @@
 package org.xin.lab;
 
 import com.vaadin.Application;
+import com.vaadin.incubator.cufonlabel.CufonLabel;
+import com.vaadin.incubator.cufonlabel.CufonLink;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class MyVaadinApplication extends Application {
 
-  private final Window window = new Window("Hello World MainWindow");
+  private final Window mainWindow = new Window("Hello World MainWindow");
 
   @Override
   public void init() {
-    setMainWindow(window);
-    window.addComponent(new Button("Click You"));
-    // window.addComponent(new Button("Clicfk Me"));
+    setMainWindow(mainWindow);
+    mainWindow.addComponent(new Button("Click Foo"));
+    final Label label = new CufonLabel("Hello Vaadin user",
+        "HelveticaRoundedBold");
+    mainWindow.addComponent(label);
+
+    final Link l = new CufonLink("Testing a link", "HelveticaRoundedBold",
+        new ExternalResource("http://vaadin.com"));
+    mainWindow.addComponent(l);
   }
 
 }
