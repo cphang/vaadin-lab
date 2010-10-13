@@ -1,5 +1,0 @@
-build/*
-target/*
-.classpath
-.settings/*
-.project
