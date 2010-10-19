@@ -6,4 +6,8 @@
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 
     <inherits name="com.vaadin.incubator.cufonlabel.widgetset.CufonlabelApplicationWidgetset" />
+
+    
+
+    <inherits name="org.vaadin.browsercookies.widgetset.BrowserCookiesApplicationWidgetset" />
 </module>

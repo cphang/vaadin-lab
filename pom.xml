@@ -9,7 +9,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jetty.port>8081</jetty.port>
-		<jetty.scan.sec>1</jetty.scan.sec>
+		<jetty.scan.sec>10</jetty.scan.sec>
+		<vaadin-widgets-dir>src/main/webapp/VAADIN/widgetsets</vaadin-widgets-dir>
 	</properties>
 	<version>1.0</version>
 	<name>Vaadin Web Application</name>
@@ -49,13 +50,8 @@
 				<configuration>
 					<!-- if you don't specify any modules, the plugin will find them -->
 					<!--modules> .. </modules -->
-					<webappDirectory>${project.build.directory}/${project.build.finalName}/VAADIN/widgetsets</webappDirectory>
-					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-					<runTarget>clean</runTarget>
-					<hostedWebapp>${project.build.directory}/${project.build.finalName}</hostedWebapp>
-					<noServer>true</noServer>
-					<port>8080</port>
-					<soyc>false</soyc>
+					<webappDirectory>${vaadin-widgets-dir}</webappDirectory>
+					<extraJvmArgs>-Dgwt.style=PRETTY -Xmx512M -Xss1024k</extraJvmArgs>
 				</configuration>
 				<executions>
 					<execution>
@@ -74,6 +70,7 @@
 				<executions>
 					<execution>
 						<configuration>
+
 							<!-- if you don't specify any modules, the plugin will find them -->
 							<!-- <modules> <module>${package}.gwt.MyWidgetSet</module> </modules> -->
 						</configuration>
@@ -82,6 +79,17 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<!-- also delete the generated vaadin web content -->
+							<directory>${vaadin-widgets-dir}</directory>
+						</fileset>
+					</filesets>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -117,18 +125,7 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin</artifactId>
-			<version>6.4.5</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-maven-plugin</artifactId>
-			<version>1.0.0</version>
-			<type>maven-plugin</type>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
+			<version>6.4.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -150,6 +147,11 @@
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>cufonlabel</artifactId>
 			<version>0.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>browsercookies</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.gwt</groupId>
