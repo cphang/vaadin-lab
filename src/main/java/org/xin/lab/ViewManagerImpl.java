@@ -10,10 +10,11 @@ public class ViewManagerImpl implements ViewManager {
   private final ComponentContainer addOnView = new AddOnView();
   private final ComponentContainer viewChanger = new ViewSwitcher(this);
   private final ComponentContainer fullImageView = new FullImageView();
-  private final ComponentContainer resouceEditView = new AppView();
+  private final ComponentContainer resouceEditView;
 
   public ViewManagerImpl(Window mainWindow) {
     this.mainWindow = mainWindow;
+    resouceEditView = new AppView(mainWindow);
   }
 
   /*

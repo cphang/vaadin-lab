@@ -1,45 +1,83 @@
 package org.xin.lab;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class ResourceEditFields extends CustomComponent {
+
+  private final static Logger log = LoggerFactory.getLogger(ResourceEditFields.class);
 
   private final FormLayout fieldLayout = new FormLayout();
 
   private final TextField nameField = new TextField("Name");
   private final TextField emailField = new TextField("e-mail");
+  private final TextField phoneField = new TextField("Phone");
 
   private final AddRemoveButtons addAndRemoveButtons = new AddRemoveButtons();
+  private final FieldsBinder binder = new FieldsBinder();
+  private final List<Field> allFields = new ArrayList<Field>();
+
+  private BeanItem<MyResource> item;
 
   public ResourceEditFields() {
+    buildLayout();
+    createAndAddFields();
+  }
+
+  private void createAndAddFields() {
+    addNameField();
+    addEmailField();
+    addPhoneField();
+    addHobbiesField();
+    addAccordion();
+    addAddFieldButton();
+  }
+
+  private void addPhoneField() {
+    phoneField.setWidth(200, UNITS_PIXELS);
+    fieldLayout.addComponent(phoneField);
+  }
+
+  private void addEmailField() {
+    emailField.setRequired(true);
+    emailField.setWidth("200px");
+    fieldLayout.addComponent(emailField);
+  }
+
+  private void addNameField() {
+
+    nameField.setWidth("300px");
+    fieldLayout.addComponent(nameField);
+
+    nameField.setInvalidCommitted(false);
+    nameField.setNullRepresentation("");
+    nameField.setNullSettingAllowed(false);
+    nameField.setWriteThrough(false);
+    fieldLayout.addComponent(new Label("created by"));
+  }
+
+  private void buildLayout() {
     setCompositionRoot(fieldLayout);
     fieldLayout.setMargin(true);
     fieldLayout.setWidth("400px");
     fieldLayout.setHeight(100, UNITS_PERCENTAGE);
-
-    nameField.setWidth("300px");
-    fieldLayout.addComponent(nameField);
-    fieldLayout.addComponent(new Label("created by"));
-
-    emailField.setRequired(true);
-    emailField.setWidth("300px");
-    fieldLayout.addComponent(emailField);
-
-    final TextField c = new TextField("Phone");
-    c.setWidth(300, UNITS_PIXELS);
-    fieldLayout.addComponent(c);
-
-    addHobbiesField();
-    addAccordion();
-    addAddFieldButton();
   }
 
   private void addAddFieldButton() {
@@ -72,8 +110,51 @@ public class ResourceEditFields extends CustomComponent {
     fieldLayout.addComponent(new AddRemoveButtons());
   }
 
-  public void setResource(MyResource person) {
-    nameField.setValue(person.getName());
-    emailField.setValue(person.getEmail());
+  public void setItemToBind(BeanItem<MyResource> beanItem) {
+    this.item = beanItem;
+    binder.bindFields();
   }
+
+  private class FieldsBinder {
+
+    private Field toBeBind;
+
+    private void bindFields() {
+      bind(nameField).with(getPropertyWithIdName());
+      bind(emailField).with(getPropertyWithIdEmail());
+    }
+
+    private Property getPropertyWithIdName() {
+      return getProperty("name");
+    }
+
+    private Property getPropertyWithIdEmail() {
+      return getProperty("email");
+    }
+
+    private Property getProperty(Object id) {
+      return item.getItemProperty(id);
+    }
+
+    private FieldsBinder bind(TextField nameField) {
+      this.toBeBind = nameField;
+      return this;
+    }
+
+    private void with(Property itemProperty) {
+      toBeBind.setPropertyDataSource(itemProperty);
+    }
+  }
+
+  public List<Field> getAllFields() {
+    final Iterator<Component> iterator = fieldLayout.getComponentIterator();
+    while (iterator.hasNext()) {
+      final Component component = iterator.next();
+      if (component instanceof Field) {
+        allFields.add((Field) component);
+      }
+    }
+    return allFields;
+  }
+
 }
